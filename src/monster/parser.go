@@ -52,6 +52,12 @@ func prepareList(list *SourceList) error {
 			return err
 		}
 		break
+	case "abp":
+		err := convertABPToBaseDomains(lines)
+		if err != nil {
+			return err
+		}
+		break
 	default:
 		return errors.New(fmt.Sprintf("Unknown list type: '%s' for list '%s'!", list.Type, list.Name))
 	}
@@ -102,14 +108,25 @@ func removeComments(lines []string) {
 }
 
 func convertHostsToDomains(lines []string) error {
-	for i, line := range lines {
-		if strings.HasPrefix(line, "0.0.0.0") {
-			lines[i] = strings.TrimSpace(strings.TrimPrefix(line, "0.0.0.0"))
+	for i := range lines {
+		if strings.HasPrefix(lines[i], "0.0.0.0") {
+			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "0.0.0.0"))
 		}
-		if strings.HasPrefix(line, "127.0.0.1") {
-			lines[i] = strings.TrimSpace(strings.TrimPrefix(line, "127.0.0.1"))
+		if strings.HasPrefix(lines[i], "127.0.0.1") {
+			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "127.0.0.1"))
 		}
 	}
+	return nil
+}
 
+func convertABPToBaseDomains(lines []string) error {
+	for i := range lines {
+		if strings.HasPrefix(lines[i], "||") {
+			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "||"))
+		}
+		if strings.HasSuffix(lines[i], "^") {
+			lines[i] = strings.TrimSuffix(lines[i], "^")
+		}
+	}
 	return nil
 }

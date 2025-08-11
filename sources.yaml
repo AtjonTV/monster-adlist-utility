@@ -44,3 +44,24 @@ block:
       title: StevenBlack
       homepage: "https://github.com/StevenBlack/hosts"
       license: "https://github.com/StevenBlack/hosts/blob/master/license.txt"
+  - name: rpilist-crypto
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/crypto"
+    type: abp
+    header:
+      title: RPiList crypto
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-gambling
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/gambling"
+    type: abp
+    header:
+      title: RPiList gambling
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-malware
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/malware"
+    type: abp
+    header:
+      title: RPiList malware
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
