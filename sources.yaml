@@ -1,4 +1,5 @@
 allow:
+  # my personalised list. remove this list or replace it with your own.
   - name: atjontv-allowlist
     url: "https://monster-adlist.atvg.cloud/~atjontv/allowlist.txt"
     type: domains
