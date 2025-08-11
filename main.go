@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2025 Thomas Obernosterer, licensed under the EUPL
+ */
+
 package main
 
 import (
