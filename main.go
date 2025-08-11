@@ -41,6 +41,16 @@ func main() {
 		panic(err)
 	}
 
+	stat, err := os.Stat(outDir)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(outDir, 0755)
+		if err != nil {
+			panic(err)
+		}
+	} else if !stat.IsDir() {
+		panic(fmt.Sprintf("The output directory '%s' is not a directory.\n", outDir))
+	}
+
 	newList, err := monster.BuildMonster(&sources, outDir)
 	if err != nil {
 		panic(err)
