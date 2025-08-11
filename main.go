@@ -6,6 +6,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	"atjon.tv/monster/src/monster"
@@ -14,12 +15,14 @@ import (
 func main() {
 	var sourceYaml string
 	var outDir string
-	var updateFor string
+	var makeDiff bool
+	var diffAgainst string
 	var relinkBase bool
 
 	flag.StringVar(&sourceYaml, "source", "sources.yaml", "Path to sources.yaml")
-	flag.StringVar(&outDir, "out", "./", "Path to an output directory, where both monster.list and (optionally) monster.update will be written to.")
-	flag.StringVar(&updateFor, "update", "monster_base.list", "Create an .update file for the given .list and the newly created .list")
+	flag.StringVar(&outDir, "out", "./", "Path to an output directory, where both monster.list and monster.update (diff) will be written to.")
+	flag.BoolVar(&makeDiff, "diff", false, "Skip the creation of an .update (diff) file")
+	flag.StringVar(&diffAgainst, "diff-file", "monster_base.list", "Create an .update (diff) file for the given .list and the newly created .list")
 	flag.BoolVar(&relinkBase, "relink", false, "Relink the monster_base.list to the newly created monster.list inside the output directory")
 	flag.Parse()
 
@@ -43,18 +46,18 @@ func main() {
 		panic(err)
 	}
 
-	if updateFor != "" {
-		_, err = os.Stat(outDir + string(os.PathSeparator) + updateFor)
+	if makeDiff {
+		_, err = os.Stat(outDir + string(os.PathSeparator) + diffAgainst)
 		if os.IsNotExist(err) {
-			_, err = os.Stat(updateFor)
+			_, err = os.Stat(diffAgainst)
 			if os.IsNotExist(err) {
-				panic("The updateFor file was not found: " + updateFor)
+				panic("The .list file to diff against was not found: " + diffAgainst)
 			}
 		} else {
-			updateFor = outDir + string(os.PathSeparator) + updateFor
+			diffAgainst = outDir + string(os.PathSeparator) + diffAgainst
 		}
 
-		err = monster.CreatePatch(&sources, updateFor, newList)
+		err = monster.CreatePatch(&sources, diffAgainst, newList)
 		if err != nil {
 			panic(err)
 		}
