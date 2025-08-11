@@ -1,11 +1,10 @@
 allow:
   - name: atjontv-allowlist
-    data:
-      - "tollfreeforwarding.com"
+    url: "https://monster-adlist.atvg.cloud/~atjontv/allowlist.txt"
     type: domains
     header:
       title: AtjonTV's Allowlist
-      license: MIT
+      license: "https://unlicense.org"
 block:
   - name: hagezi-ultimate
     url: "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/domains/ultimate.txt"
@@ -63,5 +62,47 @@ block:
     type: abp
     header:
       title: RPiList malware
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-notserious
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/notserious"
+    type: abp
+    header:
+      title: RPiList notserious
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-streaming
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/streaming"
+    type: abp
+    header:
+      title: RPiList streaming
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-phishing-angriffe
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/Phishing-Angriffe"
+    type: abp
+    header:
+      title: RPiList Phishing-Angriffe
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-spammails
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/spam.mails"
+    type: abp
+    header:
+      title: RPiList spam.mails
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-win10telemetry
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/Win10Telemetry"
+    type: abp
+    header:
+      title: RPiList Win10 Telemetry
+      homepage: "https://github.com/RPiList/specials"
+      license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
+  - name: rpilist-fakescience
+    url: "https://raw.githubusercontent.com/RPiList/specials/refs/heads/master/Blocklisten/Fake-Science"
+    type: abp
+    header:
+      title: RPiList Fake-Science
       homepage: "https://github.com/RPiList/specials"
       license: "https://github.com/RPiList/specials/blob/master/LICENSE.md"
