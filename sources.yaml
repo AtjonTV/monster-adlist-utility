@@ -1,0 +1,46 @@
+allow:
+  - name: atjontv-allowlist
+    data:
+      - "tollfreeforwarding.com"
+    type: domains
+    header:
+      title: AtjonTV's Allowlist
+      license: MIT
+block:
+  - name: hagezi-ultimate
+    url: "https://raw.githubusercontent.com/hagezi/dns-blocklists/refs/heads/main/domains/ultimate.txt"
+    type: domains
+    header:
+      title: HaGeZi's Ultimate DNS Blocklist
+      homepage: "https://github.com/hagezi/dns-blocklists"
+      license: "https://github.com/hagezi/dns-blocklists/blob/main/LICENSE"
+  - name: blocklist-ads
+    url: "https://raw.githubusercontent.com/blocklistproject/Lists/refs/heads/master/alt-version/ads-nl.txt"
+    type: domains
+    header:
+      title: The Block List Project - Ads List (NL)
+      homepage: "https://blocklist.site"
+      license: "https://unlicense.org"
+  - name: blocklist-crypto
+    url: "https://raw.githubusercontent.com/blocklistproject/Lists/refs/heads/master/alt-version/crypto-nl.txt"
+    type: domains
+    header:
+      title: The Block List Project - Crypto List (NL)
+      homepage: "https://blocklist.site"
+      license: "https://unlicense.org"
+  - name: yoyo-adlist
+    url: "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&showintro=0&mimetype=plaintext"
+    type: domains
+    header:
+      title: Peter Lowe
+      homepage: "https://pgl.yoyo.org/adservers/serverlist.php"
+      license: "https://pgl.yoyo.org/adservers/policy.php"
+  - name: stevenblack-hosts
+    url: "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts"
+    type: hosts
+    trim:
+      head: 40 # remove first 40 lines
+    header:
+      title: StevenBlack
+      homepage: "https://github.com/StevenBlack/hosts"
+      license: "https://github.com/StevenBlack/hosts/blob/master/license.txt"
