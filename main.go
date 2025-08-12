@@ -18,12 +18,16 @@ func main() {
 	var makeDiff bool
 	var diffAgainst string
 	var relinkBase bool
+	var disableRewrite bool
+	var doRewrite bool
 
 	flag.StringVar(&sourceYaml, "source", "sources.yaml", "Path to sources.yaml")
 	flag.StringVar(&outDir, "out", "./", "Path to an output directory, where both monster.list and monster.update (diff) will be written to.")
-	flag.BoolVar(&makeDiff, "diff", false, "Skip the creation of an .update (diff) file")
+	flag.BoolVar(&makeDiff, "diff", false, "Create an .update (diff) file")
 	flag.StringVar(&diffAgainst, "diff-file", "monster_base.list", "Create an .update (diff) file for the given .list and the newly created .list")
 	flag.BoolVar(&relinkBase, "relink", false, "Relink the monster_base.list to the newly created monster.list inside the output directory")
+	flag.BoolVar(&disableRewrite, "no-rewrite", false, "Explicitly disable the rewrite feature, even when enabled in sources.yaml")
+	flag.BoolVar(&doRewrite, "rewrite", false, "Explicitly enable the rewrite feature, even when disabled in sources.yaml; Forces --no-rewrite to be false")
 	flag.Parse()
 
 	sources, err := monster.LoadSourcesFromFile(sourceYaml)
@@ -51,25 +55,31 @@ func main() {
 		panic(fmt.Sprintf("The output directory '%s' is not a directory.\n", outDir))
 	}
 
+	sources.Rewrite.Enable = doRewrite || (sources.Rewrite.Enable && !disableRewrite)
+
 	newList, err := monster.BuildMonster(&sources, outDir)
 	if err != nil {
 		panic(err)
 	}
 
 	if makeDiff {
+		var doCreateDiff = true
 		_, err = os.Stat(outDir + string(os.PathSeparator) + diffAgainst)
 		if os.IsNotExist(err) {
 			_, err = os.Stat(diffAgainst)
 			if os.IsNotExist(err) {
-				panic("The .list file to diff against was not found: " + diffAgainst)
+				fmt.Printf("WARN: The .list file ('%s') to diff against was not found, skipping\n", diffAgainst)
+				doCreateDiff = false
 			}
 		} else {
 			diffAgainst = outDir + string(os.PathSeparator) + diffAgainst
 		}
 
-		err = monster.CreatePatch(&sources, diffAgainst, newList)
-		if err != nil {
-			panic(err)
+		if doCreateDiff {
+			err = monster.CreatePatch(&sources, diffAgainst, newList)
+			if err != nil {
+				fmt.Printf("WARN: Failed to create diff due to an error, continueing: %s\n", err)
+			}
 		}
 	}
 

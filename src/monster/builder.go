@@ -24,17 +24,53 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 		return "", err
 	}
 
-	var monsterList = RenderHeader(sources)
-	monsterList = append(monsterList, removeAllowFromBlock(blockList, allowList)...)
+	var domainList = removeAllowFromBlock(blockList, allowList)
+	var monsterList = make([]string, 0, 30+len(domainList))
 
-	var now = time.Now().Format("2006-01-02_15-04")
-	var monsterName = fmt.Sprintf("%s%smonster_%s.list", outFolder, pathSeparator, now)
-	err = writeFile(monsterName, []byte(strings.Join(monsterList, "\n")))
+	var writeNormalMonster = true
+
+	if sources.Rewrite.Enable {
+		var rewriteList = make([]string, 0, 30+len(domainList))
+		rewriteList = append(rewriteList, RenderHeader(sources)...)
+		for _, domain := range domainList {
+			rewriteList = append(rewriteList, sources.Rewrite.CustomIP+" "+domain)
+		}
+		switch sources.Rewrite.Mode {
+		case "new_file":
+			monsterName, err := writeListToFile(outFolder, "_rewrite", rewriteList)
+			if err != nil {
+				return "", err
+			}
+			fmt.Printf("MONSTER: created monster rewrite file: %s\n", monsterName)
+			break
+		case "override":
+			writeNormalMonster = false
+			monsterList = rewriteList
+			break
+		}
+	}
+
+	if writeNormalMonster {
+		monsterList = append(monsterList, RenderHeader(sources)...)
+		monsterList = append(monsterList, domainList...)
+	}
+
+	monsterName, err := writeListToFile(outFolder, "", monsterList)
 	if err != nil {
 		return "", err
 	}
 
 	fmt.Printf("MONSTER: created monster file: %s\n", monsterName)
+	return monsterName, nil
+}
+
+func writeListToFile(folder string, suffix string, list []string) (string, error) {
+	var now = time.Now().Format("2006-01-02_15-04")
+	var monsterName = fmt.Sprintf("%s%smonster_%s%s.list", folder, pathSeparator, now, suffix)
+	err := writeFile(monsterName, []byte(strings.Join(list, "\n")))
+	if err != nil {
+		return "", err
+	}
 	return monsterName, nil
 }
 

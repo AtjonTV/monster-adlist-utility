@@ -5,8 +5,15 @@
 package monster
 
 type Sources struct {
-	Allow []SourceList `yaml:"allow"`
-	Block []SourceList `yaml:"block"`
+	Rewrite Rewrite      `yaml:"rewrite"`
+	Allow   []SourceList `yaml:"allow"`
+	Block   []SourceList `yaml:"block"`
+}
+
+type Rewrite struct {
+	Enable   bool   `yaml:"enable"`
+	CustomIP string `yaml:"custom_ip"`
+	Mode     string `yaml:"mode"`
 }
 
 type SourceList struct {
