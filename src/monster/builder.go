@@ -48,12 +48,14 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 			monsterList = rewriteList
 			break
 		}
+		rewriteList = nil
 	}
 
 	if writeNormalMonster {
 		monsterList = append(monsterList, RenderHeader(sources)...)
 		monsterList = append(monsterList, domainList...)
 	}
+	domainList = nil
 
 	monsterName, err := writeListToFile(outFolder, "", monsterList)
 	if err != nil {
