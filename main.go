@@ -76,9 +76,9 @@ func main() {
 		}
 
 		if doCreateDiff {
-			err = monster.CreatePatch(&sources, diffAgainst, newList)
+			err = monster.CreateDiffFile(&sources, diffAgainst, newList)
 			if err != nil {
-				fmt.Printf("WARN: Failed to create diff due to an error, continueing: %s\n", err)
+				fmt.Printf("WARN: Failed to create diff due to an error: %s\n", err)
 			}
 		}
 	}

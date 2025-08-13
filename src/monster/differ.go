@@ -10,11 +10,13 @@ import (
 	"strings"
 )
 
-func CreatePatch(sources *Sources, previousMonster string, newMonster string) error {
+func CreateDiffFile(sources *Sources, previousMonster string, newMonster string) error {
 	_, err := os.Stat(previousMonster)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("the previous monster file was not found: %s", previousMonster)
 	}
+
+	fmt.Printf("DIFF: preparing diff file creation between '%s' and '%s'\n", previousMonster, newMonster)
 
 	prevList, err := readListData(previousMonster)
 	if err != nil {
@@ -30,15 +32,23 @@ func CreatePatch(sources *Sources, previousMonster string, newMonster string) er
 	trimLines(newList)
 	removeComments(newList)
 
-	var patchList = RenderHeader(sources)
-	patchList = append(patchList, removeAllowFromBlock(newList, prevList)...)
+	var diffList = RenderHeader(sources)
+	var headerSize = len(diffList)
+	diffList = append(diffList, removeAllowFromBlock(newList, prevList)...)
+	newList = nil
+	prevList = nil
+
+	if len(diffList) == headerSize {
+		fmt.Println("DIFF: no changes detected, skipping file creation.")
+		return nil
+	}
 
 	var patchName = strings.Replace(newMonster, ".list", ".update", -1)
-	err = writeFile(patchName, []byte(strings.Join(patchList, "\n")))
+	err = writeFile(patchName, []byte(strings.Join(diffList, "\n")))
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("PATCH: created patch file: %s\n", patchName)
+	fmt.Printf("DIFF: created patch file: %s\n", patchName)
 	return nil
 }
