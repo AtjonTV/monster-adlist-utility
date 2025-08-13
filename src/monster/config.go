@@ -4,16 +4,32 @@
 
 package monster
 
+import "fmt"
+
 type Sources struct {
-	Rewrite Rewrite      `yaml:"rewrite"`
-	Allow   []SourceList `yaml:"allow"`
-	Block   []SourceList `yaml:"block"`
+	Rewrite   Rewrite      `yaml:"rewrite"`
+	CleanRule CleanRule    `yaml:"cleanup"`
+	Allow     []SourceList `yaml:"allow"`
+	Block     []SourceList `yaml:"block"`
+
+	VerboseLog bool
+}
+
+func (sources *Sources) DebugLog(format string, a ...any) {
+	if sources.VerboseLog {
+		fmt.Printf(format, a...)
+	}
 }
 
 type Rewrite struct {
 	Enable   bool   `yaml:"enable"`
 	CustomIP string `yaml:"custom_ip"`
 	Mode     string `yaml:"mode"`
+}
+
+type CleanRule struct {
+	Enable   bool `yaml:"enable"`
+	KeepDays int  `yaml:"keep_days"` // only keep N days (0 = disabled, >=1 = N days into the past)
 }
 
 type SourceList struct {

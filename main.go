@@ -20,6 +20,9 @@ func main() {
 	var relinkBase bool
 	var disableRewrite bool
 	var doRewrite bool
+	var disableCleanup bool
+	var doCleanup bool
+	var doVerboseLog bool
 
 	flag.StringVar(&sourceYaml, "source", "sources.yaml", "Path to sources.yaml")
 	flag.StringVar(&outDir, "out", "./", "Path to an output directory, where both monster.list and monster.update (diff) will be written to.")
@@ -28,12 +31,17 @@ func main() {
 	flag.BoolVar(&relinkBase, "relink", false, "Relink the monster_base.list to the newly created monster.list inside the output directory")
 	flag.BoolVar(&disableRewrite, "no-rewrite", false, "Explicitly disable the rewrite feature, even when enabled in sources.yaml")
 	flag.BoolVar(&doRewrite, "rewrite", false, "Explicitly enable the rewrite feature, even when disabled in sources.yaml; Forces --no-rewrite to be false")
+	flag.BoolVar(&disableCleanup, "no-cleanup", false, "Explicitly disable the cleanup feature, even when enabled in sources.yaml")
+	flag.BoolVar(&doCleanup, "cleanup", false, "Explicitly enable the cleanup feature, even when disabled in sources.yaml; Forces --no-cleanup to be false")
+	flag.BoolVar(&doVerboseLog, "verbose", false, "Enable verbose (debug) logging")
 	flag.Parse()
 
 	sources, err := monster.LoadSourcesFromFile(sourceYaml)
 	if err != nil {
 		panic(err)
 	}
+
+	sources.VerboseLog = doVerboseLog
 
 	err = monster.DownloadSources(&sources)
 	if err != nil {
@@ -104,6 +112,15 @@ func main() {
 		}
 
 		err = os.Chdir("..")
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	sources.CleanRule.Enable = doCleanup || (sources.CleanRule.Enable && !disableCleanup)
+
+	if sources.CleanRule.Enable {
+		err = monster.CleanUp(&sources, outDir)
 		if err != nil {
 			panic(err)
 		}

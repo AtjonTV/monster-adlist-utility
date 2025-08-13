@@ -2,6 +2,9 @@ rewrite:
   enable: false
   custom_ip: 5.223.51.157
   mode: new_file
+cleanup:
+  enable: true
+  keep_days: 2 # only keep today and yesterday
 allow:
   # my personalised list. remove this list or replace it with your own.
   - name: atjontv-allowlist
