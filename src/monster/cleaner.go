@@ -22,11 +22,12 @@ func CleanUp(sources *Sources, outDir string) error {
 		for _, file := range files {
 			fileTime, err := extractTimeFromFileName(file.Name())
 			if err != nil {
+				sources.DebugLog("DEBUG: could not extract time from file '%s'\n", file.Name())
 				continue
 			}
 			var hrs = time.Since(fileTime).Round(24 * time.Hour).Hours()
 			var oldHrs = float64(sources.CleanRule.KeepDays) * 24
-			sources.DebugLog("DEBUG: time=%s; hours=%f; considered old=%f\n", fileTime.Format(time.RFC3339), hrs, oldHrs)
+			sources.DebugLog("DEBUG: file='%s' time=%s; hours=%f; considered old=%f\n", file.Name(), fileTime.Format(time.RFC3339), hrs, oldHrs)
 			if hrs >= oldHrs {
 				removalList = append(removalList, file.Name())
 			}
