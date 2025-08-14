@@ -31,7 +31,7 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 
 	if sources.Rewrite.Enable {
 		var rewriteList = make([]string, 0, 30+len(domainList))
-		rewriteList = append(rewriteList, RenderHeader(sources)...)
+		rewriteList = append(rewriteList, RenderHeader(sources, len(domainList))...)
 		for _, domain := range domainList {
 			rewriteList = append(rewriteList, sources.Rewrite.CustomIP+" "+domain)
 		}
@@ -52,7 +52,7 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 	}
 
 	if writeNormalMonster {
-		monsterList = append(monsterList, RenderHeader(sources)...)
+		monsterList = append(monsterList, RenderHeader(sources, len(domainList))...)
 		monsterList = append(monsterList, domainList...)
 	}
 	domainList = nil

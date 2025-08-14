@@ -32,11 +32,14 @@ func CreateDiffFile(sources *Sources, previousMonster string, newMonster string)
 	trimLines(newList)
 	removeComments(newList)
 
-	var diffList = RenderHeader(sources)
+	domainList := removeAllowFromBlock(newList, prevList)
+
+	var diffList = RenderHeader(sources, len(domainList))
 	var headerSize = len(diffList)
-	diffList = append(diffList, removeAllowFromBlock(newList, prevList)...)
+	diffList = append(diffList, domainList...)
 	newList = nil
 	prevList = nil
+	domainList = nil
 
 	if len(diffList) == headerSize {
 		fmt.Println("DIFF: no changes detected, skipping file creation.")
