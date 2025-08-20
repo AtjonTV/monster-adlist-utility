@@ -5,7 +5,6 @@
 package monster
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -51,15 +50,13 @@ func prepareList(list *SourceList) error {
 		if err != nil {
 			return err
 		}
-		break
 	case "abp":
 		err := convertABPToBaseDomains(lines)
 		if err != nil {
 			return err
 		}
-		break
 	default:
-		return errors.New(fmt.Sprintf("Unknown list type: '%s' for list '%s'!", list.Type, list.Name))
+		return fmt.Errorf("Unknown list type: '%s' for list '%s'!", list.Type, list.Name)
 	}
 
 	err = writeListData(list, lines)
@@ -109,11 +106,11 @@ func removeComments(lines []string) {
 
 func convertHostsToDomains(lines []string) error {
 	for i := range lines {
-		if strings.HasPrefix(lines[i], "0.0.0.0") {
-			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "0.0.0.0"))
+		if cut, hadPrefix := strings.CutPrefix(lines[i], "0.0.0.0"); hadPrefix {
+			lines[i] = strings.TrimSpace(cut)
 		}
-		if strings.HasPrefix(lines[i], "127.0.0.1") {
-			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "127.0.0.1"))
+		if cut, hadPrefix := strings.CutPrefix(lines[i], "127.0.0.1"); hadPrefix {
+			lines[i] = strings.TrimSpace(cut)
 		}
 	}
 	return nil
@@ -121,11 +118,11 @@ func convertHostsToDomains(lines []string) error {
 
 func convertABPToBaseDomains(lines []string) error {
 	for i := range lines {
-		if strings.HasPrefix(lines[i], "||") {
-			lines[i] = strings.TrimSpace(strings.TrimPrefix(lines[i], "||"))
+		if cut, hadPrefix := strings.CutPrefix(lines[i], "||"); hadPrefix {
+			lines[i] = strings.TrimSpace(cut)
 		}
-		if strings.HasSuffix(lines[i], "^") {
-			lines[i] = strings.TrimSuffix(lines[i], "^")
+		if cut, hadSuffix := strings.CutSuffix(lines[i], "^"); hadSuffix {
+			lines[i] = cut
 		}
 	}
 	return nil

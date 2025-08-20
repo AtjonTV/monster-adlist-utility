@@ -42,11 +42,9 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 				return "", err
 			}
 			fmt.Printf("MONSTER: created monster rewrite file: %s\n", monsterName)
-			break
 		case "override":
 			writeNormalMonster = false
 			monsterList = rewriteList
-			break
 		}
 		rewriteList = nil
 	}
