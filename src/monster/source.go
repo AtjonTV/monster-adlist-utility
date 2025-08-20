@@ -4,8 +4,11 @@
 
 package monster
 
-import "os"
-import "gopkg.in/yaml.v3"
+import (
+	"os"
+
+	"github.com/goccy/go-yaml"
+)
 
 // source.yaml loader
 
