@@ -46,13 +46,13 @@ func CleanUp(sources *Sources, outDir string) error {
 
 func extractTimeFromFileName(fileName string) (time.Time, error) {
 	cleanString := strings.TrimPrefix(fileName, "monster_")
-	var suffix = ".list"
-	if strings.HasSuffix(cleanString, ".update") {
-		suffix = ".update"
-	} else if strings.HasSuffix(cleanString, "_rewrite.list") {
-		suffix = "_rewrite.list"
+	suffixes := []string{".list", ".update", "_rewrite.list"}
+	for _, suffix := range suffixes {
+		if cut, hadSuffix := strings.CutSuffix(cleanString, suffix); hadSuffix {
+			cleanString = cut
+			break
+		}
 	}
 
-	cleanName := strings.TrimSuffix(cleanString, suffix)
-	return time.Parse("2006-01-02_15-04", cleanName)
+	return time.Parse("2006-01-02_15-04", cleanString)
 }
