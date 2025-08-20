@@ -33,12 +33,12 @@ func CreateDiffFile(sources *Sources, previousMonster string, newMonster string)
 	removeComments(newList)
 
 	domainList := removeAllowFromBlock(newList, prevList)
+	newList = nil
+	prevList = nil
 
 	var diffList = RenderHeader(sources, len(domainList))
 	var headerSize = len(diffList)
 	diffList = append(diffList, domainList...)
-	newList = nil
-	prevList = nil
 	domainList = nil
 
 	if len(diffList) == headerSize {
@@ -46,7 +46,7 @@ func CreateDiffFile(sources *Sources, previousMonster string, newMonster string)
 		return nil
 	}
 
-	var patchName = strings.Replace(newMonster, ".list", ".update", -1)
+	var patchName = strings.ReplaceAll(newMonster, ".list", ".update")
 	err = writeFile(patchName, []byte(strings.Join(diffList, "\n")))
 	if err != nil {
 		return err
