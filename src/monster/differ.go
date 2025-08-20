@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func CreateDiffFile(sources *Sources, previousMonster string, newMonster string) error {
+func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) error {
 	_, err := os.Stat(previousMonster)
 	if os.IsNotExist(err) {
 		return fmt.Errorf("the previous monster file was not found: %s", previousMonster)
@@ -36,7 +36,7 @@ func CreateDiffFile(sources *Sources, previousMonster string, newMonster string)
 	newList = nil
 	prevList = nil
 
-	var diffList = RenderHeader(sources, len(domainList))
+	var diffList = m.RenderHeader(len(domainList))
 	var headerSize = len(diffList)
 	diffList = append(diffList, domainList...)
 	domainList = nil

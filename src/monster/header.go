@@ -6,19 +6,19 @@ package monster
 
 import "fmt"
 
-func RenderHeader(sources *Sources, entryCount int) []string {
-	var header = make([]string, 0, len(sources.Allow)+len(sources.Block)+4)
+func (m *Monster) RenderHeader(entryCount int) []string {
+	var header = make([]string, 0, len(m.Sources.Allow)+len(m.Sources.Block)+4)
 
 	header = append(header, "#")
 	header = append(header, "# Title: AtjonTV's Monster Adlist")
 	header = append(header, "# Author: Thomas Obernosterer")
 	header = append(header, "# Homepage: https://monster-adlist.atvg.cloud/")
-	header = append(header, fmt.Sprintf("# Total of %d unique domains from %d lists", entryCount, len(sources.Allow)+len(sources.Block)))
+	header = append(header, fmt.Sprintf("# Total of %d unique domains from %d lists", entryCount, len(m.Sources.Allow)+len(m.Sources.Block)))
 	header = append(header, "# Based on:")
 
-	var allSources = make([]SourceList, 0, len(sources.Allow)+len(sources.Block))
-	allSources = append(allSources, sources.Allow...)
-	allSources = append(allSources, sources.Block...)
+	var allSources = make([]SourceList, 0, len(m.Sources.Allow)+len(m.Sources.Block))
+	allSources = append(allSources, m.Sources.Allow...)
+	allSources = append(allSources, m.Sources.Block...)
 
 	for _, source := range allSources {
 		if source.Header.Title == "" {

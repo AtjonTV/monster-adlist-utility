@@ -10,14 +10,14 @@ import (
 	"strings"
 )
 
-func PrepareSources(sources *Sources) error {
-	for _, source := range sources.Allow {
+func (m *Monster) PrepareSources() error {
+	for _, source := range m.Sources.Allow {
 		err := prepareList(&source)
 		if err != nil {
 			return err
 		}
 	}
-	for _, source := range sources.Block {
+	for _, source := range m.Sources.Block {
 		err := prepareList(&source)
 		if err != nil {
 			return err

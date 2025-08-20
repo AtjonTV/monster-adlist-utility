@@ -14,17 +14,17 @@ import (
 var tmpDir string = os.TempDir()
 var pathSeparator string = string(os.PathSeparator)
 
-func DownloadSources(sources *Sources) error {
-	for i := range sources.Allow {
-		err := processList(&sources.Allow[i], "allow")
+func (m *Monster) DownloadSources() error {
+	for i := range m.Sources.Allow {
+		err := processList(&m.Sources.Allow[i], "allow")
 		if err != nil {
 			// TODO: We ignore download errors, maybe we should retry and write a log
 			//return err
 		}
 	}
 
-	for i := range sources.Block {
-		err := processList(&sources.Block[i], "block")
+	for i := range m.Sources.Block {
+		err := processList(&m.Sources.Block[i], "block")
 		if err != nil {
 			// TODO: We ignore download errors, maybe we should retry and write a log
 			//return err

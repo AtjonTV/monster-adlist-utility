@@ -41,14 +41,14 @@ func main() {
 		panic(err)
 	}
 
-	sources.VerboseLog = doVerboseLog
+	monster := monster.New(sources, doVerboseLog)
 
-	err = monster.DownloadSources(&sources)
+	err = monster.DownloadSources()
 	if err != nil {
 		panic(err)
 	}
 
-	err = monster.PrepareSources(&sources)
+	err = monster.PrepareSources()
 	if err != nil {
 		panic(err)
 	}
@@ -65,7 +65,7 @@ func main() {
 
 	sources.Rewrite.Enable = doRewrite || (sources.Rewrite.Enable && !disableRewrite)
 
-	newList, err := monster.BuildMonster(&sources, outDir)
+	newList, err := monster.BuildMonster(outDir)
 	if err != nil {
 		panic(err)
 	}
@@ -84,7 +84,7 @@ func main() {
 		}
 
 		if doCreateDiff {
-			err = monster.CreateDiffFile(&sources, diffAgainst, newList)
+			err = monster.CreateDiffFile(diffAgainst, newList)
 			if err != nil {
 				fmt.Printf("WARN: Failed to create diff due to an error: %s\n", err)
 			}
@@ -120,7 +120,7 @@ func main() {
 	sources.CleanRule.Enable = doCleanup || (sources.CleanRule.Enable && !disableCleanup)
 
 	if sources.CleanRule.Enable {
-		err = monster.CleanUp(&sources, outDir)
+		err = monster.CleanUp(outDir)
 		if err != nil {
 			panic(err)
 		}

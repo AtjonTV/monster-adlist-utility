@@ -13,13 +13,13 @@ import (
 	"time"
 )
 
-func BuildMonster(sources *Sources, outFolder string) (string, error) {
-	blockList, err := buildSubList(sources.Block)
+func (m *Monster) BuildMonster(outFolder string) (string, error) {
+	blockList, err := buildSubList(m.Sources.Block)
 	if err != nil {
 		return "", err
 	}
 
-	allowList, err := buildSubList(sources.Allow)
+	allowList, err := buildSubList(m.Sources.Allow)
 	if err != nil {
 		return "", err
 	}
@@ -29,13 +29,13 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 
 	var writeNormalMonster = true
 
-	if sources.Rewrite.Enable {
+	if m.Sources.Rewrite.Enable {
 		var rewriteList = make([]string, 0, 30+len(domainList))
-		rewriteList = append(rewriteList, RenderHeader(sources, len(domainList))...)
+		rewriteList = append(rewriteList, m.RenderHeader(len(domainList))...)
 		for _, domain := range domainList {
-			rewriteList = append(rewriteList, sources.Rewrite.CustomIP+" "+domain)
+			rewriteList = append(rewriteList, m.Sources.Rewrite.CustomIP+" "+domain)
 		}
-		switch sources.Rewrite.Mode {
+		switch m.Sources.Rewrite.Mode {
 		case "new_file":
 			monsterName, err := writeListToFile(outFolder, "_rewrite", rewriteList)
 			if err != nil {
@@ -50,7 +50,7 @@ func BuildMonster(sources *Sources, outFolder string) (string, error) {
 	}
 
 	if writeNormalMonster {
-		monsterList = append(monsterList, RenderHeader(sources, len(domainList))...)
+		monsterList = append(monsterList, m.RenderHeader(len(domainList))...)
 		monsterList = append(monsterList, domainList...)
 	}
 	domainList = nil

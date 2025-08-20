@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func CleanUp(sources *Sources, outDir string) error {
-	if sources.CleanRule.KeepDays > 0 {
-		fmt.Printf("CLEAN: preparing clean-up of files older %d days in '%s'\n", sources.CleanRule.KeepDays, outDir)
+func (m *Monster) CleanUp(outDir string) error {
+	if m.Sources.CleanRule.KeepDays > 0 {
+		fmt.Printf("CLEAN: preparing clean-up of files older %d days in '%s'\n", m.Sources.CleanRule.KeepDays, outDir)
 		var files, err = os.ReadDir(outDir)
 		if err != nil {
 			return err
@@ -22,12 +22,12 @@ func CleanUp(sources *Sources, outDir string) error {
 		for _, file := range files {
 			fileTime, err := extractTimeFromFileName(file.Name())
 			if err != nil {
-				sources.DebugLog("DEBUG: could not extract time from file '%s'\n", file.Name())
+				m.DebugLog("DEBUG: could not extract time from file '%s'\n", file.Name())
 				continue
 			}
 			var hrs = time.Since(fileTime).Round(24 * time.Hour).Hours()
-			var oldHrs = float64(sources.CleanRule.KeepDays) * 24
-			sources.DebugLog("DEBUG: file='%s' time=%s; hours=%f; considered old=%f\n", file.Name(), fileTime.Format(time.RFC3339), hrs, oldHrs)
+			var oldHrs = float64(m.Sources.CleanRule.KeepDays) * 24
+			m.DebugLog("DEBUG: file='%s' time=%s; hours=%f; considered old=%f\n", file.Name(), fileTime.Format(time.RFC3339), hrs, oldHrs)
 			if hrs >= oldHrs {
 				removalList = append(removalList, file.Name())
 			}
@@ -35,7 +35,7 @@ func CleanUp(sources *Sources, outDir string) error {
 		fmt.Printf("CLEAN: removing %d files\n", len(removalList))
 		for _, file := range removalList {
 			fileName := outDir + pathSeparator + file
-			sources.DebugLog("DEBUG: removing file '%s'\n", fileName)
+			m.DebugLog("DEBUG: removing file '%s'\n", fileName)
 			_ = os.Remove(fileName)
 		}
 		fmt.Printf("CLEAN: done\n")
