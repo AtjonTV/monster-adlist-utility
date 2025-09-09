@@ -19,3 +19,11 @@ func (m *Monster) DebugLog(format string, a ...any) {
 		fmt.Printf(format, a...)
 	}
 }
+
+func (m *Monster) SetRewriteFlag(forceEnable bool, forceDisable bool) {
+	m.Sources.Rewrite.Enable = forceEnable || (m.Sources.Rewrite.Enable && !forceDisable)
+}
+
+func (m *Monster) SetCleanFlag(forceEnable bool, forceDisable bool) {
+	m.Sources.CleanRule.Enable = forceEnable || (m.Sources.CleanRule.Enable && !forceDisable)
+}

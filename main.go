@@ -63,7 +63,7 @@ func main() {
 		panic(fmt.Sprintf("The output directory '%s' is not a directory.\n", outDir))
 	}
 
-	sources.Rewrite.Enable = doRewrite || (sources.Rewrite.Enable && !disableRewrite)
+	monster.SetRewriteFlag(doRewrite, disableRewrite)
 
 	newList, err := monster.BuildMonster(outDir)
 	if err != nil {
@@ -117,7 +117,7 @@ func main() {
 		}
 	}
 
-	sources.CleanRule.Enable = doCleanup || (sources.CleanRule.Enable && !disableCleanup)
+	monster.SetCleanFlag(doCleanup, disableCleanup)
 
 	if sources.CleanRule.Enable {
 		err = monster.CleanUp(outDir)
