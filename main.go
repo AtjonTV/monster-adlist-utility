@@ -41,12 +41,12 @@ func main() {
 		panic(err)
 	}
 
-	err = monsterMaker.DownloadSources()
+	err = monsterMaker.DownloadSourceLists()
 	if err != nil {
 		panic(err)
 	}
 
-	err = monsterMaker.PrepareSources()
+	err = monsterMaker.PrepareSourceLists()
 	if err != nil {
 		panic(err)
 	}

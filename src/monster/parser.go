@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func (m *Monster) PrepareSources() error {
+func (m *Monster) PrepareSourceLists() error {
 	for _, source := range m.Sources.Allow {
 		err := prepareList(&source)
 		if err != nil {

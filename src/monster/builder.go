@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func (m *Monster) BuildMonster(outFolder string) (string, error) {
+func (m *Monster) BuildMonsterList(outFolder string) (string, error) {
 	blockList, err := buildSubList(m.Sources.Block)
 	if err != nil {
 		return "", err

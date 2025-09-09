@@ -14,7 +14,7 @@ import (
 var tmpDir string = os.TempDir()
 var pathSeparator string = string(os.PathSeparator)
 
-func (m *Monster) DownloadSources() error {
+func (m *Monster) DownloadSourceLists() error {
 	for i := range m.Sources.Allow {
 		err := processList(&m.Sources.Allow[i], "allow")
 		if err != nil {
