@@ -26,6 +26,8 @@ func (m *Monster) BuildMonsterList() (string, error) {
 	}
 
 	var domainList = utils.RemoveListItems(blockList, allowList)
+	blockList = nil // needs to be freed here, currently has 90+MB (2025-09-09)
+	allowList = nil
 	var monsterList = make([]string, 0, 30+len(domainList))
 
 	var writeNormalMonster = true
