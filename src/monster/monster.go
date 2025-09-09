@@ -10,6 +10,7 @@ import (
 type Monster struct {
 	Sources    Sources
 	VerboseLog bool
+	OutputDir  string
 }
 
 func New(sources Sources, printVerbose bool) Monster {
@@ -32,6 +33,14 @@ func NewFromFile(path string, printVerbose bool) (Monster, error) {
 	}
 
 	return New(sources, printVerbose), nil
+}
+
+func (m *Monster) SetOutputDirectory(dir string) error {
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		return err
+	}
+	m.OutputDir = dir
+	return nil
 }
 
 func (m *Monster) DebugLog(format string, a ...any) {

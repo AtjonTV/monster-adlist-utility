@@ -61,9 +61,13 @@ func main() {
 		panic(fmt.Sprintf("The output directory '%s' is not a directory.\n", outDir))
 	}
 
+	err = monsterMaker.SetOutputDirectory(outDir)
+	if err != nil {
+		panic(err)
+	}
 	monsterMaker.SetRewriteFlag(doRewrite, disableRewrite)
 
-	newList, err := monsterMaker.BuildMonsterList(outDir)
+	newList, err := monsterMaker.BuildMonsterList()
 	if err != nil {
 		panic(err)
 	}
@@ -117,7 +121,7 @@ func main() {
 
 	monsterMaker.SetCleanFlag(doCleanup, disableCleanup)
 
-	err = monsterMaker.CleanUp(outDir)
+	err = monsterMaker.CleanUp()
 	if err != nil {
 		panic(err)
 	}

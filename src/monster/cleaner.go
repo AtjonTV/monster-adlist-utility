@@ -11,14 +11,14 @@ import (
 	"time"
 )
 
-func (m *Monster) CleanUp(outDir string) error {
+func (m *Monster) CleanUp() error {
 	if !m.Sources.CleanRule.Enable {
 		return nil
 	}
 
 	if m.Sources.CleanRule.KeepDays > 0 {
-		fmt.Printf("CLEAN: preparing clean-up of files older %d days in '%s'\n", m.Sources.CleanRule.KeepDays, outDir)
-		var files, err = os.ReadDir(outDir)
+		fmt.Printf("CLEAN: preparing clean-up of files older %d days in '%s'\n", m.Sources.CleanRule.KeepDays, m.OutputDir)
+		var files, err = os.ReadDir(m.OutputDir)
 		if err != nil {
 			return err
 		}
@@ -38,7 +38,7 @@ func (m *Monster) CleanUp(outDir string) error {
 		}
 		fmt.Printf("CLEAN: removing %d files\n", len(removalList))
 		for _, file := range removalList {
-			fileName := outDir + pathSeparator + file
+			fileName := m.OutputDir + pathSeparator + file
 			m.DebugLog("DEBUG: removing file '%s'\n", fileName)
 			_ = os.Remove(fileName)
 		}

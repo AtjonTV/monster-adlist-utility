@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func (m *Monster) BuildMonsterList(outFolder string) (string, error) {
+func (m *Monster) BuildMonsterList() (string, error) {
 	blockList, err := buildSubList(m.Sources.Block)
 	if err != nil {
 		return "", err
@@ -37,7 +37,7 @@ func (m *Monster) BuildMonsterList(outFolder string) (string, error) {
 		}
 		switch m.Sources.Rewrite.Mode {
 		case "new_file":
-			monsterName, err := writeListToFile(outFolder, "_rewrite", rewriteList)
+			monsterName, err := writeListToFile(m.OutputDir, "_rewrite", rewriteList)
 			if err != nil {
 				return "", err
 			}
@@ -55,7 +55,7 @@ func (m *Monster) BuildMonsterList(outFolder string) (string, error) {
 	}
 	domainList = nil
 
-	monsterName, err := writeListToFile(outFolder, "", monsterList)
+	monsterName, err := writeListToFile(m.OutputDir, "", monsterList)
 	if err != nil {
 		return "", err
 	}
