@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"atjon.tv/monster/src/utils"
+	"atjon.tv/monster/internal/utils"
 )
 
 func (m *Monster) PrepareSourceLists() error {

@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"atjon.tv/monster/src/utils"
+	"atjon.tv/monster/internal/utils"
 )
 
 var tmpDir = os.TempDir()

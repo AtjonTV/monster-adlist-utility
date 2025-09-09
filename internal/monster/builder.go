@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"atjon.tv/monster/src/utils"
+	"atjon.tv/monster/internal/utils"
 )
 
 func (m *Monster) BuildMonsterList() (string, error) {

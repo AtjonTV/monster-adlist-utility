@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"atjon.tv/monster/src/utils"
+	"atjon.tv/monster/internal/utils"
 )
 
 func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) error {

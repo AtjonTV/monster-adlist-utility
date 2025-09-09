@@ -10,7 +10,7 @@ import (
 	"os"
 	"runtime/trace"
 
-	"atjon.tv/monster/src/monster"
+	"atjon.tv/monster/internal/monster"
 )
 
 func main() {
