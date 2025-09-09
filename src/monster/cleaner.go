@@ -12,6 +12,10 @@ import (
 )
 
 func (m *Monster) CleanUp(outDir string) error {
+	if !m.Sources.CleanRule.Enable {
+		return nil
+	}
+
 	if m.Sources.CleanRule.KeepDays > 0 {
 		fmt.Printf("CLEAN: preparing clean-up of files older %d days in '%s'\n", m.Sources.CleanRule.KeepDays, outDir)
 		var files, err = os.ReadDir(outDir)

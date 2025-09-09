@@ -117,10 +117,8 @@ func main() {
 
 	monsterMaker.SetCleanFlag(doCleanup, disableCleanup)
 
-	if sources.CleanRule.Enable {
-		err = monster.CleanUp(outDir)
-		if err != nil {
-			panic(err)
-		}
+	err = monsterMaker.CleanUp(outDir)
+	if err != nil {
+		panic(err)
 	}
 }
