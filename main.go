@@ -36,17 +36,17 @@ func main() {
 	flag.BoolVar(&doVerboseLog, "verbose", false, "Enable verbose (debug) logging")
 	flag.Parse()
 
-	monster, err := monster.NewFromFile(sourceYaml, doVerboseLog)
+	monsterMaker, err := monster.NewFromFile(sourceYaml, doVerboseLog)
 	if err != nil {
 		panic(err)
 	}
 
-	err = monster.DownloadSources()
+	err = monsterMaker.DownloadSources()
 	if err != nil {
 		panic(err)
 	}
 
-	err = monster.PrepareSources()
+	err = monsterMaker.PrepareSources()
 	if err != nil {
 		panic(err)
 	}
@@ -61,9 +61,9 @@ func main() {
 		panic(fmt.Sprintf("The output directory '%s' is not a directory.\n", outDir))
 	}
 
-	monster.SetRewriteFlag(doRewrite, disableRewrite)
+	monsterMaker.SetRewriteFlag(doRewrite, disableRewrite)
 
-	newList, err := monster.BuildMonster(outDir)
+	newList, err := monsterMaker.BuildMonsterList(outDir)
 	if err != nil {
 		panic(err)
 	}
@@ -82,7 +82,7 @@ func main() {
 		}
 
 		if doCreateDiff {
-			err = monster.CreateDiffFile(diffAgainst, newList)
+			err = monsterMaker.CreateDiffFile(diffAgainst, newList)
 			if err != nil {
 				fmt.Printf("WARN: Failed to create diff due to an error: %s\n", err)
 			}
@@ -115,7 +115,7 @@ func main() {
 		}
 	}
 
-	monster.SetCleanFlag(doCleanup, disableCleanup)
+	monsterMaker.SetCleanFlag(doCleanup, disableCleanup)
 
 	if sources.CleanRule.Enable {
 		err = monster.CleanUp(outDir)
