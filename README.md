@@ -8,7 +8,7 @@ For the creation of the "monster.list", a `sources.yaml` is used to source the l
 To generate the list, you have to run:
 ```bash
 # Compile
-./build.sh
+./scripts/build.sh
 
 # Run
 ./monster-update
