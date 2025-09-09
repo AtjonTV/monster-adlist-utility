@@ -1,6 +1,11 @@
 package monster
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+
+	"github.com/goccy/go-yaml"
+)
 
 type Monster struct {
 	Sources    Sources
@@ -12,6 +17,21 @@ func New(sources Sources, printVerbose bool) Monster {
 		Sources:    sources,
 		VerboseLog: printVerbose,
 	}
+}
+
+func NewFromFile(path string, printVerbose bool) (Monster, error) {
+	var data, err = os.ReadFile(path)
+	if err != nil {
+		return Monster{}, err
+	}
+
+	var sources Sources
+	err = yaml.Unmarshal(data, &sources)
+	if err != nil {
+		return Monster{}, err
+	}
+
+	return New(sources, printVerbose), nil
 }
 
 func (m *Monster) DebugLog(format string, a ...any) {

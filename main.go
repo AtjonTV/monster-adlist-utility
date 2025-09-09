@@ -36,12 +36,10 @@ func main() {
 	flag.BoolVar(&doVerboseLog, "verbose", false, "Enable verbose (debug) logging")
 	flag.Parse()
 
-	sources, err := monster.LoadSourcesFromFile(sourceYaml)
+	monster, err := monster.NewFromFile(sourceYaml, doVerboseLog)
 	if err != nil {
 		panic(err)
 	}
-
-	monster := monster.New(sources, doVerboseLog)
 
 	err = monster.DownloadSources()
 	if err != nil {
