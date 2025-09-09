@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime/trace"
 
 	"atjon.tv/monster/src/monster"
 )
@@ -34,6 +35,18 @@ func main() {
 	flag.BoolVar(&disableCleanup, "no-cleanup", false, "Explicitly disable the cleanup feature, even when enabled in sources.yaml")
 	flag.BoolVar(&doCleanup, "cleanup", false, "Explicitly enable the cleanup feature, even when disabled in sources.yaml; Forces --no-cleanup to be false")
 	flag.BoolVar(&doVerboseLog, "verbose", false, "Enable verbose (debug) logging")
+	flag.BoolFunc("trace", "Enable runtime tracing that gets written into trace.out", func(s string) error {
+		tr, err := os.Create("trace.out")
+		if err != nil {
+			panic(err)
+		}
+		err = trace.Start(tr)
+		if err != nil {
+			panic(err)
+		}
+
+		return nil
+	})
 	flag.Parse()
 
 	monsterMaker, err := monster.NewFromFile(sourceYaml, doVerboseLog)
@@ -124,5 +137,9 @@ func main() {
 	err = monsterMaker.CleanUp()
 	if err != nil {
 		panic(err)
+	}
+
+	if trace.IsEnabled() {
+		trace.Stop()
 	}
 }
