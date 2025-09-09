@@ -56,7 +56,7 @@ func prepareList(list *SourceList) error {
 			return err
 		}
 	default:
-		return fmt.Errorf("Unknown list type: '%s' for list '%s'!", list.Type, list.Name)
+		return fmt.Errorf("unknown list type: '%s' for list '%s'", list.Type, list.Name)
 	}
 
 	err = writeListData(list, lines)

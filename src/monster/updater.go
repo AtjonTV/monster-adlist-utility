@@ -11,8 +11,8 @@ import (
 	"strings"
 )
 
-var tmpDir string = os.TempDir()
-var pathSeparator string = string(os.PathSeparator)
+var tmpDir = os.TempDir()
+var pathSeparator = string(os.PathSeparator)
 
 func (m *Monster) DownloadSourceLists() error {
 	for i := range m.Sources.Allow {
