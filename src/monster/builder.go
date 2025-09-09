@@ -5,12 +5,13 @@
 package monster
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"sort"
 	"strings"
 	"time"
+
+	"atjon.tv/monster/src/utils"
 )
 
 func (m *Monster) BuildMonsterList() (string, error) {
@@ -24,7 +25,7 @@ func (m *Monster) BuildMonsterList() (string, error) {
 		return "", err
 	}
 
-	var domainList = removeAllowFromBlock(blockList, allowList)
+	var domainList = utils.RemoveListItems(blockList, allowList)
 	var monsterList = make([]string, 0, 30+len(domainList))
 
 	var writeNormalMonster = true
@@ -67,27 +68,11 @@ func (m *Monster) BuildMonsterList() (string, error) {
 func writeListToFile(folder string, suffix string, list []string) (string, error) {
 	var now = time.Now().Format("2006-01-02_15-04")
 	var monsterName = fmt.Sprintf("%s%smonster_%s%s.list", folder, pathSeparator, now, suffix)
-	err := writeFile(monsterName, []byte(strings.Join(list, "\n")))
+	err := utils.WriteDataToFile(monsterName, []byte(strings.Join(list, "\n")))
 	if err != nil {
 		return "", err
 	}
 	return monsterName, nil
-}
-
-func removeAllowFromBlock(blockList []string, allowList []string) []string {
-	elementsToRemove := make(map[string]bool)
-	for _, element := range allowList {
-		elementsToRemove[element] = true
-	}
-
-	result := make([]string, 0, len(blockList))
-
-	for _, element := range blockList {
-		if !elementsToRemove[element] && element != "" {
-			result = append(result, element)
-		}
-	}
-	return result
 }
 
 func buildSubList(lists []SourceList) ([]string, error) {
@@ -103,38 +88,15 @@ func buildSubList(lists []SourceList) ([]string, error) {
 
 	var allLines []string
 	for _, file := range files {
-		fileHandle, err := os.Open(file)
+		lines, err := utils.ReadLinesFromFile(file)
 		if err != nil {
 			return []string{}, err
 		}
-
-		scanner := bufio.NewScanner(fileHandle)
-		for scanner.Scan() {
-			allLines = append(allLines, scanner.Text())
-		}
-
-		err = fileHandle.Close()
-		if err != nil {
-			return []string{}, err
-		}
+		allLines = append(allLines, lines...)
 	}
 
 	sort.Strings(allLines)
 
-	sublist := removeDuplicates(allLines)
+	sublist := utils.RemoveDuplicatesFromList(allLines)
 	return sublist, nil
-}
-
-func removeDuplicates(elements []string) []string {
-	uniqueLines := make([]string, 0, len(elements))
-	if len(elements) > 0 {
-		uniqueLines = append(uniqueLines, elements[0]) // add the first line
-	}
-	for i := 1; i < len(elements); i++ {
-		if elements[i] != elements[i-1] {
-			uniqueLines = append(uniqueLines, elements[i])
-		}
-	}
-
-	return uniqueLines
 }

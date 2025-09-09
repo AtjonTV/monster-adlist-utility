@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"atjon.tv/monster/src/utils"
 )
 
 func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) error {
@@ -18,11 +20,11 @@ func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) erro
 
 	fmt.Printf("DIFF: preparing diff file creation between '%s' and '%s'\n", previousMonster, newMonster)
 
-	prevList, err := readListData(previousMonster)
+	prevList, err := utils.ReadLinesFromFile(previousMonster)
 	if err != nil {
 		return err
 	}
-	newList, err := readListData(newMonster)
+	newList, err := utils.ReadLinesFromFile(newMonster)
 	if err != nil {
 		return err
 	}
@@ -32,7 +34,7 @@ func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) erro
 	trimLines(newList)
 	removeComments(newList)
 
-	domainList := removeAllowFromBlock(newList, prevList)
+	domainList := utils.RemoveListItems(newList, prevList)
 	newList = nil
 	prevList = nil
 
@@ -47,7 +49,7 @@ func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) erro
 	}
 
 	var patchName = strings.ReplaceAll(newMonster, ".list", ".update")
-	err = writeFile(patchName, []byte(strings.Join(diffList, "\n")))
+	err = utils.WriteDataToFile(patchName, []byte(strings.Join(diffList, "\n")))
 	if err != nil {
 		return err
 	}

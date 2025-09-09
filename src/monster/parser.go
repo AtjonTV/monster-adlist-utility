@@ -6,8 +6,9 @@ package monster
 
 import (
 	"fmt"
-	"os"
 	"strings"
+
+	"atjon.tv/monster/src/utils"
 )
 
 func (m *Monster) PrepareSourceLists() error {
@@ -27,7 +28,7 @@ func (m *Monster) PrepareSourceLists() error {
 }
 
 func prepareList(list *SourceList) error {
-	lines, err := readListData(list.TempFile)
+	lines, err := utils.ReadLinesFromFile(list.TempFile)
 	if err != nil {
 		return err
 	}
@@ -59,35 +60,12 @@ func prepareList(list *SourceList) error {
 		return fmt.Errorf("unknown list type: '%s' for list '%s'", list.Type, list.Name)
 	}
 
-	err = writeListData(list, lines)
+	err = utils.WriteDataToFile(list.TempFile, []byte(strings.Join(lines, "\n")))
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func readListData(file string) ([]string, error) {
-	data, err := os.ReadFile(file)
-	if err != nil {
-		return []string{}, err
-	}
-	return strings.Split(string(data), "\n"), nil
-}
-
-func writeListData(list *SourceList, lines []string) error {
-	out, err := os.Create(list.TempFile)
-	if err != nil {
-		return err
-	}
-	defer func(out *os.File) {
-		_ = out.Close()
-	}(out)
-
-	var data = []byte(strings.Join(lines, "\n"))
-
-	_, err = out.Write(data)
-	return err
 }
 
 func trimLines(lines []string) {
