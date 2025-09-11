@@ -8,6 +8,7 @@ package monster
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 
 	"atjon.tv/monster/internal/utils"
@@ -42,19 +43,19 @@ func prepareList(list *SourceList) error {
 		lines = lines[:len(lines)-list.Trim.Tail]
 	}
 
-	trimLines(lines)
-	removeComments(lines)
+	trimLines(&lines)
+	removeComments(&lines)
 
 	switch list.Type {
 	case "domains":
 		break
 	case "hosts":
-		err := convertHostsToDomains(lines)
+		err := convertHostsToDomains(&lines)
 		if err != nil {
 			return err
 		}
 	case "abp":
-		err := convertABPToBaseDomains(lines)
+		err := convertABPToBaseDomains(&lines)
 		if err != nil {
 			return err
 		}
@@ -67,42 +68,45 @@ func prepareList(list *SourceList) error {
 		return err
 	}
 
+	lines = nil
+	runtime.GC()
+
 	return nil
 }
 
-func trimLines(lines []string) {
-	for i, line := range lines {
-		lines[i] = strings.TrimSpace(line)
+func trimLines(lines *[]string) {
+	for i, line := range *lines {
+		(*lines)[i] = strings.TrimSpace(line)
 	}
 }
 
-func removeComments(lines []string) {
-	for i, line := range lines {
+func removeComments(lines *[]string) {
+	for i, line := range *lines {
 		if strings.HasPrefix(line, "#") {
-			lines[i] = ""
+			(*lines)[i] = ""
 		}
 	}
 }
 
-func convertHostsToDomains(lines []string) error {
-	for i := range lines {
-		if cut, hadPrefix := strings.CutPrefix(lines[i], "0.0.0.0"); hadPrefix {
-			lines[i] = strings.TrimSpace(cut)
+func convertHostsToDomains(lines *[]string) error {
+	for i := range *lines {
+		if cut, hadPrefix := strings.CutPrefix((*lines)[i], "0.0.0.0"); hadPrefix {
+			(*lines)[i] = strings.TrimSpace(cut)
 		}
-		if cut, hadPrefix := strings.CutPrefix(lines[i], "127.0.0.1"); hadPrefix {
-			lines[i] = strings.TrimSpace(cut)
+		if cut, hadPrefix := strings.CutPrefix((*lines)[i], "127.0.0.1"); hadPrefix {
+			(*lines)[i] = strings.TrimSpace(cut)
 		}
 	}
 	return nil
 }
 
-func convertABPToBaseDomains(lines []string) error {
-	for i := range lines {
-		if cut, hadPrefix := strings.CutPrefix(lines[i], "||"); hadPrefix {
-			lines[i] = strings.TrimSpace(cut)
+func convertABPToBaseDomains(lines *[]string) error {
+	for i := range *lines {
+		if cut, hadPrefix := strings.CutPrefix((*lines)[i], "||"); hadPrefix {
+			(*lines)[i] = strings.TrimSpace(cut)
 		}
-		if cut, hadSuffix := strings.CutSuffix(lines[i], "^"); hadSuffix {
-			lines[i] = cut
+		if cut, hadSuffix := strings.CutSuffix((*lines)[i], "^"); hadSuffix {
+			(*lines)[i] = cut
 		}
 	}
 	return nil

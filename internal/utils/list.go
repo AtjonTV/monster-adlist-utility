@@ -6,6 +6,8 @@
 
 package utils
 
+import "slices"
+
 func RemoveDuplicatesFromList(elements []string) []string {
 	uniqueLines := make([]string, 0, len(elements))
 	if len(elements) > 0 {
@@ -20,18 +22,14 @@ func RemoveDuplicatesFromList(elements []string) []string {
 	return uniqueLines
 }
 
-func RemoveListItems(list []string, itemsToRemove []string) []string {
-	elementsToRemove := make(map[string]bool)
-	for _, element := range itemsToRemove {
+// RemoveListItemsMut removes the itemsToRemove from the list in place.
+func RemoveListItemsMut(list *[]string, itemsToRemove *[]string) {
+	elementsToRemove := make(map[string]bool, len(*itemsToRemove))
+	for _, element := range *itemsToRemove {
 		elementsToRemove[element] = true
 	}
 
-	result := make([]string, 0, len(list))
-
-	for _, element := range list {
-		if !elementsToRemove[element] && element != "" {
-			result = append(result, element)
-		}
-	}
-	return result
+	*list = slices.DeleteFunc(*list, func(element string) bool {
+		return elementsToRemove[element]
+	})
 }

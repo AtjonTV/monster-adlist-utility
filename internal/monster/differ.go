@@ -9,6 +9,7 @@ package monster
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 
 	"atjon.tv/monster/internal/utils"
@@ -31,19 +32,16 @@ func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) erro
 		return err
 	}
 
-	trimLines(prevList)
-	removeComments(prevList)
-	trimLines(newList)
-	removeComments(newList)
+	trimLines(&prevList)
+	removeComments(&prevList)
+	trimLines(&newList)
+	removeComments(&newList)
 
-	domainList := utils.RemoveListItems(newList, prevList)
-	newList = nil
-	prevList = nil
+	utils.RemoveListItemsMut(&newList, &prevList)
 
-	var diffList = m.RenderHeader(len(domainList))
+	var diffList = m.RenderHeader(len(newList))
 	var headerSize = len(diffList)
-	diffList = append(diffList, domainList...)
-	domainList = nil
+	diffList = append(diffList, newList...)
 
 	if len(diffList) == headerSize {
 		fmt.Println("DIFF: no changes detected, skipping file creation.")
@@ -55,6 +53,13 @@ func (m *Monster) CreateDiffFile(previousMonster string, newMonster string) erro
 	if err != nil {
 		return err
 	}
+
+	// set variable to nil, so the memory can be freed
+	prevList = nil
+	newList = nil
+	diffList = nil
+	// run the garbage collector
+	runtime.GC()
 
 	fmt.Printf("DIFF: created patch file: %s\n", patchName)
 	return nil

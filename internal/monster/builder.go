@@ -9,6 +9,7 @@ package monster
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
 	"time"
@@ -27,17 +28,15 @@ func (m *Monster) BuildMonsterList() (string, error) {
 		return "", err
 	}
 
-	var domainList = utils.RemoveListItems(blockList, allowList)
-	blockList = nil // needs to be freed here, currently has 90+MB (2025-09-09)
-	allowList = nil
-	var monsterList = make([]string, 0, 30+len(domainList))
+	utils.RemoveListItemsMut(&blockList, &allowList)
+	var monsterList = make([]string, 0, 30+len(blockList))
 
 	var writeNormalMonster = true
 
 	if m.Sources.Rewrite.Enable {
-		var rewriteList = make([]string, 0, 30+len(domainList))
-		rewriteList = append(rewriteList, m.RenderHeader(len(domainList))...)
-		for _, domain := range domainList {
+		var rewriteList = make([]string, 0, 30+len(blockList))
+		rewriteList = append(rewriteList, m.RenderHeader(len(blockList))...)
+		for _, domain := range blockList {
 			rewriteList = append(rewriteList, m.Sources.Rewrite.CustomIP+" "+domain)
 		}
 		switch m.Sources.Rewrite.Mode {
@@ -55,15 +54,21 @@ func (m *Monster) BuildMonsterList() (string, error) {
 	}
 
 	if writeNormalMonster {
-		monsterList = append(monsterList, m.RenderHeader(len(domainList))...)
-		monsterList = append(monsterList, domainList...)
+		monsterList = append(monsterList, m.RenderHeader(len(blockList))...)
+		monsterList = append(monsterList, blockList...)
 	}
-	domainList = nil
 
 	monsterName, err := writeListToFile(m.OutputDir, "", monsterList)
 	if err != nil {
 		return "", err
 	}
+
+	// set to nil, so it can be garbage collected
+	blockList = nil
+	allowList = nil
+	monsterList = nil
+	// run garbage collector
+	runtime.GC()
 
 	fmt.Printf("MONSTER: created monster file: %s\n", monsterName)
 	return monsterName, nil
@@ -102,5 +107,9 @@ func buildSubList(lists []SourceList) ([]string, error) {
 	sort.Strings(allLines)
 
 	sublist := utils.RemoveDuplicatesFromList(allLines)
+
+	allLines = nil
+	runtime.GC()
+
 	return sublist, nil
 }
