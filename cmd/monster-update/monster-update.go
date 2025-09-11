@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2025 Thomas Obernosterer. Licensed under the EUPL-1.2 or later.
+ *
+ * SPDX-License-Identifier: EUPL-1.2-or-later
  */
 
 package main
