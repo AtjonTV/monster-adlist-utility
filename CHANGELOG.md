@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `--trace` flag to create a `trace.out`
 
+### Changed
+- Internal refactor to reduce peak memory usage from 766MiB to 526MiB
+- Explicitly state `EUPL-1.2 or later` as per EUPL Guideline 2021
+
 ## [1.0.1]
 
 ### Changed

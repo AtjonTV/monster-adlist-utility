@@ -16,6 +16,11 @@ import (
 )
 
 func main() {
+	println("monster-update: Monster Adlist Utility v1.0.2")
+	println("  Copyright 2025 Thomas Obernosterer. Licensed under the EUPL-1.2 or later.")
+	println("  Homepage: https://monster-adlist.atvg.cloud/ and https://github.com/AtjonTV/monster-adlist-utility")
+	println("")
+
 	var sourceYaml string
 	var outDir string
 	var makeDiff bool
