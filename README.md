@@ -27,4 +27,4 @@ Additional options can be viewed using:
 ```
 
 ## License
-Monster Adlist Utility is licensed under the [EUPL v1.2 or later](./LICENSE.txt).
+Monster Adlist Utility is [licensed under the EUPL-1.2 or later](./LICENSE.txt).
