@@ -24,12 +24,8 @@ func RemoveDuplicatesFromList(elements []string) []string {
 
 // RemoveListItemsMut removes the itemsToRemove from the list in place.
 func RemoveListItemsMut(list *[]string, itemsToRemove *[]string) {
-	elementsToRemove := make(map[string]bool, len(*itemsToRemove))
-	for _, element := range *itemsToRemove {
-		elementsToRemove[element] = true
-	}
-
 	*list = slices.DeleteFunc(*list, func(element string) bool {
-		return elementsToRemove[element]
+		_, found := slices.BinarySearch(*itemsToRemove, element)
+		return found
 	})
 }
